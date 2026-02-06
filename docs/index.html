@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Primary Meta Tags -->
+    <meta
+      name="title"
+      content="Less Is More : Scalable Visual Navigation from Limited Data - Yves Inglin, Jonas Frey, Changan Chen, Marco Hutter"
+    />
+    <meta
+      name="description"
+      content="Embodied visual navigation: transformer-based, goal-conditioned path planning from RGB with scalable, geometric planner-generated supervision."
+    />
+    <meta
+      name="keywords"
+      content="Visual Navigation, Imitation Learning, Embodied AI, Path Planning, Legged Robots"
+    />
+    <meta
+      name="author"
+      content="Yves Inglin, Jonas Frey, Changan Chen, Marco Hutter"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Robotic Systems Lab" />
+    <meta
+      property="og:title"
+      content="Less Is More : Scalable Visual Navigation from Limited Data - Yves Inglin, Jonas Frey, Changan Chen, Marco Hutter"
+    />
+    <meta
+      property="og:description"
+      content="Embodied visual navigation: transformer-based, goal-conditioned path planning from RGB with scalable, geometric planner-generated supervision."
+    />
+    <meta
+      property="og:url"
+      content="https://yv1es.github.io/less-is-more/"
+    />
+    <meta
+      property="og:image"
+      content="https://yv1es.github.io/less-is-more/static/images/social_preview.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Less Is More : Scalable Visual Navigation from Limited Data - Research Preview"
+    />
+    <meta
+      property="article:published_time"
+      content="2025-01-26T00:00:00.000Z"
+    />
+    <meta property="article:author" content="Yves Inglin" />
+    <meta property="article:section" content="Research" />
+    <meta property="article:tag" content="Visual Navigation" />
+    <meta property="article:tag" content="Imitation Learning" />
+    <meta property="article:tag" content="Embodied AI" />
+    <meta property="article:tag" content="Path Planning" />
+    <meta property="article:tag" content="Legged Robots" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@leggedrobotics" />
+    <meta
+      name="twitter:title"
+      content="Less Is More : Scalable Visual Navigation from Limited Data - Yves Inglin, Jonas Frey, Changan Chen, Marco Hutter"
+    />
+    <meta
+      name="twitter:description"
+      content="Embodied visual navigation: transformer-based, goal-conditioned path planning from RGB with scalable, geometric planner-generated supervision."
+    />
+    <meta
+      name="twitter:image"
+      content="https://yv1es.github.io/less-is-more/static/images/social_preview.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Less Is More : Scalable Visual Navigation from Limited Data - Research Preview"
+    />
+
+    <!-- Academic/Research Specific -->
+    <meta
+      name="citation_title"
+      content="Less Is More : Scalable Visual Navigation from Limited Data"
+    />
+    <meta name="citation_author" content="Inglin, Yves" />
+    <meta name="citation_author" content="Frey, Jonas" />
+    <meta name="citation_author" content="Chen, Changan" />
+    <meta name="citation_author" content="Hutter, Marco" />
+    <meta name="citation_publication_date" content="2026" />
+    <meta name="citation_conference_title" content="CONFERENCE_NAME" />
+    <meta
+      name="citation_pdf_url"
+      content="https://arxiv.org/pdf/2601.17815.pdf"
+    />
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://ajax.googleapis.com" />
+    <link rel="preconnect" href="https://documentcloud.adobe.com" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+    <title>
+      Less Is More : Scalable Visual Navigation from Limited Data - Yves Inglin,
+      Jonas Frey, Changan Chen, Marco Hutter
+    </title>
+
+    <!-- Favicon and App Icons -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="static/images/leggedrobotics.jpg"
+    />
+    <link rel="apple-touch-icon" href="static/images/leggedrobotics.jpg" />
+
+    <!-- Critical CSS - Load synchronously -->
+    <link rel="stylesheet" href="static/css/bulma.min.css" />
+    <link rel="stylesheet" href="static/css/index.css" />
+
+    <!-- Non-critical CSS - Load asynchronously -->
+    <link
+      rel="preload"
+      href="static/css/bulma-carousel.min.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <link
+      rel="preload"
+      href="static/css/bulma-slider.min.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <link
+      rel="preload"
+      href="static/css/fontawesome.all.min.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+
+    <noscript>
+      <link rel="stylesheet" href="static/css/bulma-carousel.min.css" />
+      <link rel="stylesheet" href="static/css/bulma-slider.min.css" />
+      <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+      />
+    </noscript>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Defer non-critical JavaScript -->
+    <script
+      defer
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    ></script>
+    <script
+      defer
+      src="https://documentcloud.adobe.com/view-sdk/main.js"
+    ></script>
+    <script defer src="static/js/fontawesome.all.min.js"></script>
+    <script defer src="static/js/bulma-carousel.min.js"></script>
+    <script defer src="static/js/bulma-slider.min.js"></script>
+    <script defer src="static/js/index.js"></script>
+
+    <!-- Structured Data for Academic Papers -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ScholarlyArticle",
+        "headline": "Less Is More : Scalable Visual Navigation from Limited Data",
+        "description": "Embodied visual navigation: transformer-based, goal-conditioned path planning from RGB with scalable, geometric planner-generated supervision.",
+        "author": [
+          {
+            "@type": "Person",
+            "name": "Yves Inglin",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "ETH Zurich"
+            }
+          },
+          {
+            "@type": "Person",
+            "name": "Jonas Frey",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "Stanford University"
+            }
+          },
+          {
+            "@type": "Person",
+            "name": "Changan Chen",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "ETH Zurich"
+            }
+          },
+          {
+            "@type": "Person",
+            "name": "Marco Hutter",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "ETH Zurich"
+            }
+          }
+        ],
+        "datePublished": "2025-01-26",
+        "publisher": {
+          "@type": "Organization",
+          "name": "CONFERENCE_OR_JOURNAL_NAME"
+        },
+        "url": "https://yv1es.github.io/less-is-more",
+        "image": "https://yv1es.github.io/less-is-more/static/images/social_preview.png",
+        "keywords": [
+          "Visual Navigation",
+          "Imitation Learning",
+          "Embodied AI",
+          "Path Planning",
+          "Legged Robots"
+        ],
+        "abstract": "Imitation learning provides a powerful framework for goal-conditioned visual navigation in mobile robots, enabling obstacle avoidance while respecting human preferences and social norms. However, its effectiveness depends critically on the quality and diversity of training data. In this work, we show how classical geometric planners can be leveraged to generate syn- thetic trajectories that complement costly human demonstrations. We train Less is More (LiMo), a transformer-based visual navigation policy that predicts goal-conditioned SE(2) trajectories from a single RGB observation, and find that augmenting limited expert demonstrations with planner-generated supervi- sion yields substantial performance gains. Through ablations and complementary qualitative and quantitative analyses, we characterize how dataset scale and diversity affect planning performance. We demonstrate real-robot deployment and argue that robust visual navigation is enabled not by simply collecting more demonstrations, but by strategically curating diverse, high- quality datasets. Our results suggest that scalable, embodiment- specific geometric supervision is a practical path toward data- efficient visual navigation. ",
+        "citation": "@misc{inglin2026morescalablevisualnavigation,
+          title={Less Is More: Scalable Visual Navigation from Limited Data},
+          author={Yves Inglin and Jonas Frey and Changan Chen and Marco Hutter},
+          year={2026},
+          eprint={2601.17815},
+          archivePrefix={arXiv},
+          primaryClass={cs.RO},
+          url={https://arxiv.org/abs/2601.17815},
+        }",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "mainEntity": {
+          "@type": "WebPage",
+          "@id": "https://yv1es.github.io/less-is-more"
+        },
+        "about": [
+          {
+            "@type": "Thing",
+            "name": "Robotics"
+          },
+          {
+            "@type": "Thing",
+            "name": "Visual Navigation"
+          },
+          {
+            "@type": "Thing",
+            "name": "Imitation Learning"
+          },
+          {
+            "@type": "Thing",
+            "name": "Embodied AI"
+          },
+          {
+            "@type": "Thing",
+            "name": "Path Planning"
+          },
+          {
+            "@type": "Thing",
+            "name": "Legged Robots"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Website/Organization Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Robotic Systems Lab, ETH Zurich",
+        "url": "https://rsl.ethz.ch",
+        "logo": "https://yv1es.github.io/less-is-more/static/images/leggedrobotics.jpg",
+        "sameAs": [
+          "https://twitter.com/leggedrobotics",
+          "https://github.com/leggedrobotics"
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- Scroll to Top Button -->
+    <button
+      class="scroll-to-top"
+      onclick="scrollToTop()"
+      title="Scroll to top"
+      aria-label="Scroll to top"
+    >
+      <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- More Works Dropdown -->
+    <div class="more-works-container">
+      <button
+        class="more-works-btn"
+        onclick="toggleMoreWorks()"
+        title="View More Works from Our Lab"
+      >
+        <i class="fas fa-flask"></i>
+        More Works
+        <i class="fas fa-chevron-down dropdown-arrow"></i>
+      </button>
+      <div class="more-works-dropdown" id="moreWorksDropdown">
+        <div class="dropdown-header">
+          <h4>More Works from Our Lab</h4>
+          <button class="close-btn" onclick="toggleMoreWorks()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="works-list">
+          <a
+            href="https://grand-tour.leggedrobotics.com/"
+            class="work-item"
+            target="_blank"
+          >
+            <div class="work-info">
+              <h5>GrandTour Dataset</h5>
+              <p>
+                The GrandTour Dataset provides the largest legged robotic
+                dataset collected using an ANYbotics ANYmal D quadruped robot
+                equipped with Boxi, a state-of-the-art, fully open-source sensor
+                payload.
+              </p>
+              <span class="work-venue">Robotics: Science and Systems 2025</span>
+            </div>
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+          <a
+            href="https://leggedrobotics.github.io/fdm.github.io/"
+            class="work-item"
+            target="_blank"
+          >
+            <div class="work-info">
+              <h5>
+                Learned Perceptive Forward Dynamics Model for Safe and
+                Platform-aware Robotic Navigation
+              </h5>
+              <p>
+                Perceptive Forward Dynamics Model to predict future states and
+                failures, enabling safe navigation using an MPPI planner.
+              </p>
+              <span class="work-venue">Robotics: Science and Systems 2025</span>
+            </div>
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+          <a
+            href="https://sites.google.com/leggedrobotics.com/wild-visual-navigation"
+            class="work-item"
+            target="_blank"
+          >
+            <div class="work-info">
+              <h5>Wild Visual Navigation</h5>
+              <p>
+                Wild Visual Navigation (WVN) learns to predict traversability
+                from images via online self-supervised learning.
+              </p>
+              <span class="work-venue">Robotics: Science and Systems 2023</span>
+            </div>
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <main id="main-content">
+      <!-- Hero: Title & Authors -->
+      <section class="hero">
+        <div class="hero-body">
+          <div class="container is-max-desktop">
+            <div class="columns is-centered">
+              <div class="column has-text-centered">
+                <h1 class="title is-1 publication-title">
+                  Less is More 🍋: Scalable Visual Navigation from Limited Data
+                </h1>
+
+                <div class="is-size-5 publication-authors">
+                  <span class="author-block">
+                    <a
+                      href="https://scholar.google.com/citations?user=R23-ONAAAAAJ&hl=en"
+                      target="_blank"
+                      >Yves Inglin</a
+                    ><sup>1</sup></span
+                  >
+                  <span class="author-block">
+                    <a href="https://jonasfrey96.github.io" target="_blank"
+                      >Jonas Frey</a
+                    ><sup>2,3</sup></span
+                  >
+                  <span class="author-block">
+                    <a
+                      href="https://scholar.google.com/citations?hl=en&user=IjTAq_YAAAAJ"
+                      target="_blank"
+                      >Changan Chen</a
+                    ><sup>1</sup>
+                  </span>
+                  <span class="author-block">
+                    <a
+                      href="https://scholar.google.com/citations?hl=en&user=DO3quJYAAAAJ"
+                      target="_blank"
+                      >Marco Hutter</a
+                    ><sup>1</sup>
+                  </span>
+                </div>
+
+                <div class="is-size-5 publication-authors">
+                  <span class="author-block"><sup>1</sup>ETH Zurich</span>
+                  <span class="author-block"
+                    ><sup>2</sup>Stanford University</span
+                  >
+                  <span class="author-block"><sup>3</sup>UC Berkeley</span>
+                </div>
+
+                <div class="column has-text-centered">
+                  <div class="publication-links">
+                    <span class="link-block">
+                      <a
+                        href="https://arxiv.org/pdf/2601.17815.pdf"
+                        target="_blank"
+                        class="external-link button is-normal is-rounded is-dark"
+                      >
+                        <span class="icon">
+                          <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <span>Paper</span>
+                      </a>
+                    </span>
+
+                    <span class="link-block">
+                      <a
+                        href="https://arxiv.org/abs/2601.17815"
+                        target="_blank"
+                        class="external-link button is-normal is-rounded is-dark"
+                      >
+                        <span class="icon">
+                          <i class="ai ai-arxiv"></i>
+                        </span>
+                        <span>arXiv</span>
+                      </a>
+                    </span>
+
+                    <span class="link-block">
+                      <a
+                        href="#"
+                        onclick="return false;"
+                        class="external-link button is-normal is-rounded is-dark"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed"
+                      >
+                        <span class="icon">
+                          <i class="fab fa-github"></i>
+                        </span>
+                        <span>Code</span>
+                      </a>
+                    </span>
+
+                    <span class="link-block">
+                      <a
+                        href="#"
+                        onclick="return false;"
+                        class="external-link button is-normal is-rounded is-dark"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed"
+                      >
+                        <span class="icon">
+                          <i class="fas fa-brain"></i>
+                        </span>
+                        <span>Checkpoint</span>
+                      </a>
+                    </span>
+
+                    <span class="link-block">
+                      <a
+                        href="#"
+                        onclick="return false;"
+                        class="external-link button is-normal is-rounded is-dark"
+                        disabled
+                        style="opacity: 0.5; cursor: not-allowed"
+                      >
+                        <span class="icon">
+                          <i class="fas fa-database"></i>
+                        </span>
+                        <span>Dataset</span>
+                      </a>
+                    </span>
+                  </div>
+                  <div
+                    class="is-size-6 publication-authors"
+                    style="margin-top: 0.5rem; font-style: italic; color: #666"
+                  >
+                    Model and Dataset will be released soon.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teaser video -->
+            <div class="container is-max-desktop">
+              <video
+                poster=""
+                id="tree"
+                autoplay
+                muted
+                loop
+                width="100%"
+                preload="metadata"
+              >
+                <source
+                  src="static/videos/teaser-looping.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Paper abstract -->
+      <section class="hero is-light">
+        <div class="hero-body">
+          <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+              <div class="column is-four-fifths">
+                <h2 class="title is-3">Abstract</h2>
+                <div class="content has-text-justified">
+                  <p>
+                    Imitation learning provides a powerful framework for
+                    goal-conditioned visual navigation in mobile robots,
+                    enabling obstacle avoidance while respecting human
+                    preferences and social norms. However, its effectiveness
+                    depends critically on the quality and diversity of training
+                    data. In this work, we show how classical geometric planners
+                    can be leveraged to generate syn- thetic trajectories that
+                    complement costly human demonstrations. We train
+                    <em
+                      >Less is More (<span style="font-variant: small-caps"
+                        >LiMo</span
+                      >)</em
+                    >, a transformer-based visual navigation policy that
+                    predicts goal-conditioned SE(2) trajectories from a single
+                    RGB observation, and find that augmenting limited expert
+                    demonstrations with planner-generated supervi- sion yields
+                    substantial performance gains. Through ablations and
+                    complementary qualitative and quantitative analyses, we
+                    characterize how dataset scale and diversity affect planning
+                    performance. We demonstrate real-robot deployment and argue
+                    that robust visual navigation is enabled not by simply
+                    collecting more demonstrations, but by strategically
+                    curating diverse, high- quality datasets. Our results
+                    suggest that scalable, embodiment- specific geometric
+                    supervision is a practical path toward data- efficient
+                    visual navigation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End paper abstract -->
+
+      <!-- Dataset Curation -->
+      <section class="hero">
+        <div class="hero-body">
+          <div class="container is-max-desktop has-text-centered">
+            <h2 class="title is-3">Dataset Curation</h2>
+            <div class="content has-text-justified">
+              <p>
+                The use of a geometric planner enables the automatic, scalable
+                generation of diverse expert demonstrations. While we use the
+                real-world robot path walked during dataset collection, we also
+                sample 10 random goals in front of the robot and use a geometric
+                path planner to annotate paths based on co-registered elevation
+                maps.
+              </p>
+            </div>
+            <div class="carousel results-carousel">
+              <div class="item item-video1">
+                <video height="100%" preload="metadata">
+                  <source
+                    src="static/videos/dataset-curation/eth.webm"
+                    type="video/webm"
+                  />
+                  <source
+                    src="static/videos/dataset-curation/eth.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+              <div class="item item-video2">
+                <video muted height="100%" preload="metadata">
+                  <source
+                    src="static/videos/dataset-curation/sphinx.webm"
+                    type="video/webm"
+                  />
+                  <source
+                    src="static/videos/dataset-curation/sphinx.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+              <div class="item item-video3">
+                <video muted height="100%" preload="metadata">
+                  <source
+                    src="static/videos/dataset-curation/wall.webm"
+                    type="video/webm"
+                  />
+                  <source
+                    src="static/videos/dataset-curation/wall.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End dataset curation -->
+
+      <!-- Architecture -->
+      <section class="hero is-light">
+        <div class="hero-body">
+          <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+              <div class="column">
+                <h2 class="title is-3">Policy Architecture</h2>
+                <div class="content has-text-justified">
+                  <p>
+                    <span style="font-variant: small-caps">LiMo</span> takes a
+                    single RGB image and a robot-centric goal pose (x,y,θ) as
+                    input. Image features are extracted with a frozen DINOv2
+                    encoder and combined with learned positional embeddings. A
+                    transformer decoder, conditioned on the goal embedding,
+                    predicts a sequence of waypoint embeddings, which are
+                    linearly projected to N robot-centric waypoints (x,y,θ)
+                    forming the output trajectory.
+                  </p>
+                  <img
+                    src="static/images/architecture.svg"
+                    alt="Schematic overview of the policy architecture"
+                    loading="lazy"
+                    class="full-width-svg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Architecture -->
+
+      <!-- Predictions -->
+      <section class="hero">
+        <div class="hero-body">
+          <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">
+              Qualitative Performance and Embodied Behavior
+            </h2>
+            <div class="content has-text-justified">
+              <p>
+                <span style="font-variant: small-caps">LiMo</span> demonstrates
+                strong geometric understanding and embodiment-aware navigation
+                behavior. The policy successfully plans feasible trajectories
+                through complex environments, staircases, and rough natural
+                terrain. By leveraging scalable, automatically-generated
+                geometric demonstrations during training,
+                <span style="font-variant: small-caps">LiMo</span> develops a
+                sophisticated understanding of the underlying scene geometry and
+                embodiment, enabling it to plan trajectories that are not only
+                geometrically feasible but also aligned with ANYmal's specific
+                locomotion capabilities and physical constraints.
+              </p>
+              <p>
+                The videos below show the predictions of
+                <span style="font-variant: small-caps">LiMo</span> on GrandTour
+                missions.
+              </p>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr;
+                  gap: 2rem;
+                  margin-top: 2rem;
+                "
+              >
+                <div>
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    controls
+                    height="100%"
+                    style="border-radius: 8px"
+                  >
+                    <source
+                      src="static/videos/predictions/preds1.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+                <div>
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    controls
+                    height="100%"
+                    style="border-radius: 8px"
+                  >
+                    <source
+                      src="static/videos/predictions/preds2.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End predictions -->
+
+      <!-- Deployment -->
+      <section class="hero is-light">
+        <div class="hero-body">
+          <div class="container is-max-desktop has-text-centered">
+            <h2 class="title is-3">Deployment</h2>
+            <div class="content has-text-justified">
+              <p>
+                We deploy <span style="font-variant: small-caps">LiMo</span> in
+                closed-loop on an ANYmal D quadruped robot in real-world
+                environments not part of the training data. The policy runs on a
+                NVIDIA Jetson Orin on-board the robot at 6 Hz, using purely
+                vision-based inputs to generate collision-free local
+                trajectories. A simple lookahead path follower node tracks the
+                predicted waypoints.
+              </p>
+            </div>
+            <div class="carousel results-carousel">
+              <div class="item item-video1">
+                <div>
+                  <video controls height="100%" preload="metadata">
+                    <source
+                      src="static/videos/deployment/corridor.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <p class="carousel-subtitle">
+                    Corridor Following: Navigating tight corridors with
+                    constrained lateral space
+                  </p>
+                </div>
+              </div>
+              <div class="item item-video2">
+                <div>
+                  <video controls muted height="100%" preload="metadata">
+                    <source
+                      src="static/videos/deployment/dynamic.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <p class="carousel-subtitle">
+                    Dynamic Obstacle Avoidance: Reacting to moving obstacles in
+                    real-time
+                  </p>
+                </div>
+              </div>
+              <div class="item item-video3">
+                <div>
+                  <video controls muted height="100%" preload="metadata">
+                    <source
+                      src="static/videos/deployment/obstacle.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <p class="carousel-subtitle">
+                    Obstacle Course Navigation: Planning non-trivial paths
+                    through cluttered environments
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End deployment -->
+
+      <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+          <div class="bibtex-header">
+            <h2 class="title">BibTeX</h2>
+            <button
+              class="copy-bibtex-btn"
+              onclick="copyBibTeX()"
+              title="Copy BibTeX to clipboard"
+            >
+              <i class="fas fa-copy"></i>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
+          <pre
+            id="bibtex-code"
+          ><code>@misc{inglin2026morescalablevisualnavigation,
+      title={Less Is More: Scalable Visual Navigation from Limited Data},
+      author={Yves Inglin and Jonas Frey and Changan Chen and Marco Hutter},
+      year={2026},
+      eprint={2601.17815},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2601.17815},
+}</code></pre>
+        </div>
+      </section>
+      <!-- End BibTeX citation -->
+
+      <footer class="footer">
+        <div class="container">
+          <div class="columns is-centered">
+            <div class="column is-8">
+              <div class="content">
+                <p>
+                  This page was built using the
+                  <a
+                    href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                    target="_blank"
+                    >Academic Project Page Template</a
+                  >
+                  which was adopted from the
+                  <a href="https://nerfies.github.io" target="_blank"
+                    >Nerfies</a
+                  >
+                  project page. You are free to borrow the source code of this
+                  website, we just ask that you link back to this page in the
+                  footer. <br />
+                  This website is licensed under a
+                  <a
+                    rel="license"
+                    href="http://creativecommons.org/licenses/by-sa/4.0/"
+                    target="_blank"
+                    >Creative Commons Attribution-ShareAlike 4.0 International
+                    License</a
+                  >.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Statcounter tracking code -->
+    <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+    <!-- End of Statcounter Code -->
+  </body>
+</html>
