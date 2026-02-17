@@ -6,8 +6,11 @@ __pycache__
 logs/
 data/
 
+# Will be added later
+limo
 dataset_builder
 dataset
 helpers
 ros_package
 mppi_planner
+hf

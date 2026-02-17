@@ -4,7 +4,7 @@
 📄 <a href="https://arxiv.org/pdf/2601.17815">Paper</a> | 🌐 <a href="https://leggedrobotics.github.io/less-is-more/">Project Page</a> | 🤗 <a href="https://huggingface.co/yv1es/less-is-more">Weights</a>
 </p>
 
-**Less is More (LIMO)** is a transformer-based visual navigation policy that predicts goal-conditioned SE(2) trajectories from a single RGB observation. We demonstrate that augmenting limited expert demonstrations with geometric planner-generated trajectories yields substantial performance improvements, achieving robust visual navigation through strategic data curation rather than simply collecting more data.
+**Less is More (LiMo)** is a transformer-based visual navigation policy that predicts goal-conditioned SE(2) trajectories from a single RGB observation. We demonstrate that augmenting limited expert demonstrations with geometric planner-generated trajectories yields substantial performance improvements, achieving robust visual navigation through strategic data curation rather than simply collecting more data.
 
 ## Release Status
 
@@ -18,17 +18,12 @@
 This project uses [uv](https://docs.astral.sh/uv/) for dependency management. We assume an NVIDIA GPU with driver version ≥530 (for CUDA 12.1 support).
 
 ```bash
-git clone https://github.com/leggedrobotics/less-is-more
-cd less-is-more
-uv sync
-uv pip install -e .
-```
-
-Download the SafeTensors weights into `data/weights/`:
-
-```bash
-curl -L -o data/weights/limo_trained_on_D_aug.safetensors \
-  https://huggingface.co/yv1es/less-is-more/resolve/main/limo_trained_on_D_aug.safetensors
+git clone https://github.com/leggedrobotics/less-is-more \
+  && cd less-is-more \
+  && uv sync \
+  && uv pip install -e . \
+  && curl -L -o data/weights/limo_trained_on_D_aug.safetensors \
+    https://huggingface.co/yv1es/less-is-more/resolve/main/limo_trained_on_D_aug.safetensors
 ```
 
 The codebase uses [Hydra](https://hydra.cc/) for configuration management in the `limo` package.
