@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /logger: wandb
+
+tags: ["limo", "D_tel"]
+
+trainer:
+  max_epochs: 16
+
+logger:
+  wandb:
+    tags: ${tags}
+
+dataset:
+  dataset_type: "tel"
+
+seed: 12345

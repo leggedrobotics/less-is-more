@@ -1,0 +1,24 @@
+_target_: limo.src.dataset.limo_datamodule.LimoDataModule
+
+# Path to the dataset folder (where grandtour will be extracted)
+dataset_folder: ${paths.data_dir}/dataset
+missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split.csv
+
+# Dataset type: "tel" (teleoperation), "geo" (geometric), or "aug" (augmented - both)
+dataset_type: "aug"
+
+# DataLoader settings
+batch_size: 16
+num_workers: 8
+pin_memory: False
+
+# Shuffle settings for each split
+shuffle_train: True
+shuffle_val: False
+shuffle_test: False
+
+# Whether to include side cameras (left and right) in addition to front camera
+with_side_cams: False
+
+# Image size for transforms (height, width)
+image_size: [308, 476]

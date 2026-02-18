@@ -1,0 +1,50 @@
+ID,Short Name,Name,Timestamp,Size (GB),UUID,Split
+1,ETH-1,ETH - Polyterasse,2024-10-01-11-29-55,116.36,e97e35ad-dd7b-49c4-a158-95aba246520e,train
+2,ETH-2,ETH - Mainbuilding Indoor,2024-10-01-11-47-44,95.47,4ae7f9bc-ee51-4ba7-97c7-6a86fe765ab8,train
+3,ETH-3,ETH - Mainbuilding Outdoor,2024-10-01-12-00-49,82.26,da8f2265-5138-4d0b-8ae1-01e0015d1c58,train
+4,SPX-1,Jungfraujoch - Sphinx 1,2024-11-02-17-10-25,89.61,b845fb1b-310c-4236-a33c-c0d2c9a98092,train
+5,SPX-2,Jungfraujoch - Sphinx 2,2024-11-02-17-18-32,99.73,57b64279-18a3-451b-a516-51c1ea9c7e9a,test
+6,SPX-3,Jungfraujoch - Sphinx 3,2024-11-02-17-43-10,54.51,c31cdc28-cb10-4eff-adec-53b0069eacac,train
+7,ICE-1,Jungfraujoch - Ice Palace,2024-11-02-21-12-51,62.25,6a572e3b-57ad-4697-9ce6-0c67f451174a,train
+8,SNOW-1,Jungfraujoch - Snow 1,2024-11-03-07-52-45,50.29,d7c37880-a3cf-4aaa-b489-e501591d14b7,train
+9,SNOW-2,Jungfraujoch - Snow 2,2024-11-03-07-57-34,73.94,82e5488f-7824-45c6-94be-b3c68ca32aa7,test
+10,SNOW-3,Jungfraujoch - Snow 3,2024-11-03-08-17-23,81.52,ee14fd01-73f1-498b-8b64-a427257ea577,train
+11,EIG-1,Jungfraujoch - Eigergletscher Down,2024-11-03-13-51-43,118.8,aa22a692-a29d-4676-98b8-42dd417eeae4,test
+12,EIG-2,Jungfraujoch - Eigergletscher Up,2024-11-03-13-59-54,91.67,a2bb34d5-f963-4a63-bf4a-8ffab2da1589,train
+13,GRI-1,Grindelwald - Village 1,2024-11-04-10-57-34,100.34,34c04ec5-c1b7-4674-9d64-99ade50f71d0,train
+14,CYN-1,Grindelwald - Canyon 1,2024-11-04-12-55-59,119.97,7ffa3399-837f-40b7-8a2f-5760ce136533,train
+15,CYN-2,Grindelwald - Canyon 2,2024-11-04-13-07-13,95.01,58e4d73e-fff1-4209-bf95-6c1ee065b3f3,train
+16,HIL-1,Grindelwald - Burglauenen 1,2024-11-04-16-05-00,120.22,d38b3b33-c450-4bce-bbb8-5f961b6bb17c,train
+17,RIV-1,Grindelwald - River 1,2024-11-04-16-52-38,136.21,57363d91-6cbc-4b2f-ad25-d511fd0829e1,train
+18,PIL-1,Pilatus - Hike 1,2024-11-11-12-07-40,210.0,e3a92c6b-1fbb-496a-bdb0-ec754ec8f6f0,train
+19,PIL-2,Pilatus - Hike 2,2024-11-11-12-42-47,106.26,8a90fb38-885e-4b57-ad21-b7e44d3ec8fb,train
+20,ROOT-1,Pilatus - Fraekmuentegg Forest 1,2024-11-11-14-29-44,112.45,f7e8e6c1-828f-43a7-b047-1491217e8fb9,train
+21,HAUS-1,Verkehrshaus - Museum 1,2024-11-11-16-14-23,69.95,10aa8311-2487-4e5c-9136-91b1d9ae4efa,train
+22,HÖB-1,Hoenggerberg - Forest 1,2024-11-14-11-17-02,144.54,1a30c7fd-d833-48ac-8bf5-0d3f3f0ba5a1,train
+23,HÖB-2,Hoenggerberg - Forest 2,2024-11-14-12-01-26,127.54,5e356450-ccb0-4b8c-bd5e-21e5bfdb0d08,train
+24,HEAP-1,Heap Testsight 1,2024-11-14-13-45-37,96.13,512edee1-de86-463f-bdda-f55362e2fda1,val
+25,KÄB-1,Käferberg - Forest 1,2024-11-14-14-36-02,207.89,1b64c4e0-2747-4a4d-b983-2454b5481a69,train
+26,KÄB-2,Käferberg - Forest 2,2024-11-14-15-22-43,111.3,a454ce28-69f8-46a5-9168-08b2c42ae385,train
+27,KÄB-3,Käferberg - Forest 3,2024-11-14-16-04-09,128.88,8c3d3ce2-df6a-4ec4-98f5-1a9e08ef276e,train
+28,TRIM-1,Triemli - Biketrail 1,2024-11-15-10-16-35,130.58,b686ebd4-da47-4e49-ab20-c5504049f4b8,train
+29,ALB-1,Albisgütli - Forest 1,2024-11-15-11-18-14,91.79,624138ba-3e34-4f19-8034-af9661a566a4,train
+30,ALB-2,Albisgütli - Forest 2,2024-11-15-11-37-15,149.09,4aa3b180-7422-479f-a838-344c726175e1,train
+31,ALB-3,Albisgütli - Forest 3,2024-11-15-12-06-03,123.24,ccf36f13-9d19-4dca-8f4d-f797b4093c3b,train
+32,LMB-1,Leinbach - Forest 1,2024-11-15-14-14-12,145.69,2924d315-1d96-4db7-9df2-c9fd23d3fa9e,train
+33,LMB-2,Leinbach - Forest 2,2024-11-15-14-43-52,152.09,a866b43f-4cec-427d-871a-77d95a926075,train
+34,LEE-1,ETH - LEE 1,2024-11-15-16-41-14,99.48,4bf387d8-624a-462b-b69b-f2b4dbfce565,train
+35,ARC-1,ARCHE - Industrial,2024-11-18-12-05-01,108.22,0a626104-cdfa-47de-827a-806b0ca5326a,train
+36,ARC-2,ARCHE - Demolished,2024-11-18-13-22-14,89.43,2a4c4bd7-acfd-4c00-84c3-bf5dd6a57ad6,test
+37,ARC-3,ARCHE - Multi-Floor,2024-11-18-13-48-19,127.04,a031c136-cdba-4547-bce7-57319891ce17,val
+38,ARC-4,ARCHE - Train,2024-11-18-15-46-05,86.32,ad4cbee5-c3d8-4082-b629-e22af45faac8,train
+39,ARC-5,ARCHE - Panic Loop,2024-11-18-16-59-23,81.34,ff789a67-7541-43d8-bbe7-381e5d5105ab,train
+40,ARC-6,ARCHE - Panic Smoke 1,2024-11-18-17-13-09,74.5,c38e6cdc-cadb-4f15-bd96-daa89cb46edf,train
+41,ARC-7,ARCHE - Panic Smoke 2,2024-11-18-17-31-36,65.62,529abc82-87fc-4edf-a16f-9061893c5aab,test
+42,LEICA-1,Leica - Reception,2024-11-25-14-57-08,68.37,19e1ac85-eaf9-4d8e-baf0-27dbb215e9f4,train
+43,LEICA-2,Leica - Warehouse,2024-11-25-16-36-19,83.8,fb5f7a04-e95f-4601-a6f2-948ff69f0735,train
+44,SBB-1,SBB - Train Tracks,2024-12-03-13-15-38,125.36,75516885-5b6d-4703-9dcc-766519f9737c,train
+45,SBB-2,SBB - Train Depot,2024-12-03-13-26-40,65.89,6feee8a7-2588-4e7e-9fd4-cf897af71206,train
+46,CON-1,Construction - Corridor 1,2024-12-09-09-34-43,76.61,d3943914-d045-4442-a63c-903cbbbd2be1,train
+47,CON-2,Construction - Corridor 2,2024-12-09-09-41-46,36.02,48a42585-1b42-44df-bf82-883b09706efa,train
+48,CON-3,Construction - Apartment,2024-12-09-11-28-28,82.97,f6d20c92-44af-4697-a6d5-773bddc35fa5,train
+49,CON-4,Construction - Outdoor,2024-12-09-11-53-11,170.57,a531a101-0211-46a2-b13f-605aa4b888ab,test

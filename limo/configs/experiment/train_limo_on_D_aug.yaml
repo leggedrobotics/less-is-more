@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /logger: wandb
+
+tags: ["limo", "D_aug"]
+
+trainer:
+  max_epochs: 16
+
+logger:
+  wandb:
+    tags: ${tags}
+
+seed: 12345

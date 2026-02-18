@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - paths: default
+  - hydra: default
+
+task_name: "inference"
+
+# Model weights
+weights_path: ${paths.root_dir}/data/weights/limo_trained_on_D_aug.safetensors
+
+# Input path (single image or directory of images)
+input_path: ${paths.root_dir}/data/inference_example/input
+
+# Goals file (CSV with columns: x, y, yaw)
+goals_csv: ${paths.root_dir}/data/inference_example/goals.csv
+
+# Camera calibration (optional - for projection visualization)
+camera_info: ${paths.root_dir}/data/inference_example/camera_info.yaml
+
+# Output directory
+output_dir: ${paths.root_dir}/data/inference_example/output
+
+# Visualization settings
+image_size: [308, 476]

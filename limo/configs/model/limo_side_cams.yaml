@@ -1,0 +1,19 @@
+_target_: limo.src.models.limo_model.LimoModel
+
+net:
+  _target_: limo.src.models.components.limo_net_side_cams.LimoNet
+
+loss:
+  _target_: torch.nn.MSELoss
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  _partial_: true
+  max_lr: 0.0001
+  div_factor: 100
+
+compile: false

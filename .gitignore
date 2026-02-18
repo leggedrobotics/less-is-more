@@ -5,12 +5,12 @@ __pycache__
 
 logs/
 data/
+docs/
 
 # Will be added later
-limo
 dataset_builder
-dataset
 helpers
 ros_package
 mppi_planner
-hf
+
+*.code-workspace

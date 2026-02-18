@@ -1,0 +1,22 @@
+# @package _global_
+
+defaults:
+  - override /logger: wandb
+
+tags: ["limo_side_cams", "D_aug"]
+
+trainer:
+  max_epochs: 16
+
+logger:
+  wandb:
+    tags: ${tags}
+
+model:
+  net:
+    _target_: limo.src.models.components.limo_net_side_cams.LimoNet
+
+dataset:
+  with_side_cams: True
+
+seed: 12345

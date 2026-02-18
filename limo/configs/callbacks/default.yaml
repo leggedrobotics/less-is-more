@@ -1,0 +1,19 @@
+defaults:
+  - model_checkpoint
+  - lr_monitor
+  - model_summary
+  - tqdm_progress_bar
+  - safetensors
+  - _self_
+
+model_checkpoint:
+  dirpath: ${paths.output_dir}/checkpoints
+  filename: "{epoch:02d}"
+  save_top_k: -1
+  every_n_epochs: 1
+  save_on_train_epoch_end: true
+  auto_insert_metric_name: false
+  save_last: true
+
+model_summary:
+  max_depth: -1

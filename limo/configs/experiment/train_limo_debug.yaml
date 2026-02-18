@@ -1,0 +1,22 @@
+# @package _global_
+
+defaults:
+  - override /logger: wandb
+
+tags: ["DEBUG", "limo", "D_aug"]
+
+trainer:
+  max_epochs: 5
+
+  limit_train_batches: 0.05
+  limit_val_batches: 0.05
+  limit_test_batches: 0.05
+
+dataset:
+  missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split_debug.csv
+
+logger:
+  wandb:
+    tags: ${tags}
+
+seed: 12345
