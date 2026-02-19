@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# But allow the docs folder itself
+!docs/
+
+# Allow everything inside docs
+!docs/**
+
+# Keep .gitignore itself tracked
+!.gitignore
