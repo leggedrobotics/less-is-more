@@ -73,11 +73,22 @@ class LocalLimoDataModule(LightningDataModule):
         missions = parse_missions_csv(self.missions_csv)
         splits: dict[str, list[Dataset]] = defaultdict(list)
 
+        _zarr_dirs = {"tel": ["teleop_paths"], "geo": ["geometric_paths"], "aug": ["teleop_paths", "geometric_paths"]}
+        required = _zarr_dirs[self.dataset_type]
+
         for mission, split in missions.items():
             mission_dir = self.dataset_folder / mission
             if not mission_dir.exists():
                 log.warning(f"Mission directory not found locally, skipping: {mission_dir}")
                 continue
+            missing = [d for d in required if not (mission_dir / "data" / d).exists()]
+            if missing:
+                raise FileNotFoundError(
+                    f"Mission '{mission}' is missing zarr group(s) {missing} "
+                    f"for dataset_type='{self.dataset_type}'. "
+                    f"Run the dataset builder first: "
+                    f"uv run dataset_builder/src/build_paths.py dataset_type={self.dataset_type}"
+                )
             splits[split].append(
                 get_mission_dataset(
                     self.dataset_type,

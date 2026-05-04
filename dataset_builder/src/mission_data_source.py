@@ -93,7 +93,9 @@ class GrandTourZarrSource:
         pos = self._dlio_pos[d_idx]
         orien = self._dlio_orien[d_idx]  # xyzw
         R = _quat_to_matrix(orien)
-        yaw = float(np.arctan2(R[1, 0], R[0, 0]))
+        # DLIO body frame is rotated +90° (CCW) relative to ANYmal base_link;
+        # subtract π/2 to recover the true base heading.
+        yaw = float(np.arctan2(R[1, 0], R[0, 0])) - np.pi / 2
         return np.array([pos[0], pos[1], yaw], dtype=np.float32)
 
     def get_trajectory_world(self, i: int, duration: float, n: int) -> np.ndarray:
@@ -106,6 +108,6 @@ class GrandTourZarrSource:
             pos = self._dlio_pos[idx]
             orien = self._dlio_orien[idx]
             R = _quat_to_matrix(orien)
-            yaw = float(np.arctan2(R[1, 0], R[0, 0]))
+            yaw = float(np.arctan2(R[1, 0], R[0, 0])) - np.pi / 2
             waypoints[k] = [pos[0], pos[1], yaw]
         return waypoints

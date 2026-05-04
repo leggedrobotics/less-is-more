@@ -115,13 +115,18 @@ class MPPIObjective:
         self._gdf: Optional[torch.Tensor] = None
         self._nn = get_filter_torch(device).to(self.device)
 
-    def set_observation(self, gm: GridMap2D, start: torch.Tensor, goal: torch.Tensor) -> None:
-        self._start = start
-        self._goal = goal
+    def set_map(self, gm: GridMap2D) -> None:
         self._gm = gm
         footprint = OmegaConf.to_container(self.cfg.footprint, resolve=True)
         self._robot_footprint = build_robot_footprint(footprint, self._gm.resolution, self.device)
-        self._trav, self._gdf = self._compute_traversability_and_gdf()
+        self._trav = self._compute_traversability()
+
+    def set_observation(self, gm: GridMap2D, start: torch.Tensor, goal: torch.Tensor) -> None:
+        self._start = start
+        self._goal = goal
+        if gm is not self._gm:
+            self.set_map(gm)
+        self._gdf = self._compute_gdf()
 
     @torch.no_grad()
     def evaluate(self, population: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -201,7 +206,7 @@ class MPPIObjective:
         return cost
 
     @torch.no_grad()
-    def _compute_traversability_and_gdf(self) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _compute_traversability(self) -> torch.Tensor:
         cfg = self.cfg
         elev = self._gm.elevation.to(self.device)
         trav = 1.0 - self._nn(elev.unsqueeze(0))
@@ -223,19 +228,22 @@ class MPPIObjective:
         t[(t > cfg.risky_th) & (t < cfg.fatal_th)] = cfg.risky_value
         t[t > cfg.fatal_th] = cfg.fatal_value
         trav[~nan_mask] = t
+        return trav
 
-        gdf_mask = (trav >= cfg.fatal_th).float()
-        gdf_mask[torch.isnan(trav)] = 0.0
+    @torch.no_grad()
+    def _compute_gdf(self) -> torch.Tensor:
+        cfg = self.cfg
+        elev = self._gm.elevation.to(self.device)
+        gdf_mask = (self._trav >= cfg.fatal_th).float()
+        gdf_mask[torch.isnan(self._trav)] = 0.0
         gdf_mask = (max_pool(gdf_mask, cfg.gdf_obstacle_buffer) > 0).float().unsqueeze(0)
         goal_ij = clip_on_ray(elev.shape, world_to_map_idx(self._goal[None, :2], self._gm)[0])
-        gdf = fast_gdf_wrapper(
+        return fast_gdf_wrapper(
             gdf_mask.float()[None],
             int(goal_ij[0]),
             int(goal_ij[1]),
             torch.nan,
         )[0] * self._gm.resolution
-
-        return trav, gdf
 
     @torch.no_grad()
     def get_trav_cost(self, states: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:

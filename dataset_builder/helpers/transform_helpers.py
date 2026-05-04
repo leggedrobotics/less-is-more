@@ -71,10 +71,10 @@ def transform_se2_base_to_odom(se2_points_base: np.ndarray, t_odom_base: np.ndar
 
     yaw = se2_pose_in_odom[2]
     r_odom_base = np.array([[np.cos(yaw), -np.sin(yaw)], [np.sin(yaw), np.cos(yaw)]])
-    t_odom_base = se2_pose_in_odom[:2, None]
+    t_xy = se2_pose_in_odom[:2, None]
 
     xy_base = se2_points_base.T[:2]
-    xy_odom = r_odom_base @ xy_base + t_odom_base
+    xy_odom = r_odom_base @ xy_base + t_xy
 
     yaw_odom = se2_points_base.T[2, None] + yaw
     yaw_odom = np.arctan2(np.sin(yaw_odom), np.cos(yaw_odom))  # limit to [-pi, pi]
@@ -88,14 +88,14 @@ def transform_se2_odom_to_base(se2_points_odom: np.ndarray, T_odom_base: np.ndar
     Transform SE(2) poses from the 'odom' frame into the 'base' frame.
 
     Args:
-        se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in base frame
-        t_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom->base
+        se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in odom frame
+        T_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom->base
 
     Returns:
-        se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in odom frame
+        se2_points_base: np.ndarray of shape (N, 3), poses [x, y, yaw] in base frame
     """
     if se2_points_odom.ndim != 2 or se2_points_odom.shape[1] != 3:
-        raise ValueError("se2_points_base must be shape (N, 3)")
+        raise ValueError("se2_points_odom must be shape (N, 3)")
     if T_odom_base.shape != (4, 4):
         raise ValueError("t_odom_base must be a 4x4 matrix")
 
@@ -104,8 +104,8 @@ def transform_se2_odom_to_base(se2_points_odom: np.ndarray, T_odom_base: np.ndar
     yaw = se2_pose_in_odom[2]
     r_base_odom = np.array([[np.cos(yaw), -np.sin(yaw)], [np.sin(yaw), np.cos(yaw)]]).T
 
-    T_odom_base = se2_pose_in_odom[:2, None]
-    t_base_odom = -r_base_odom @ T_odom_base
+    t_xy = se2_pose_in_odom[:2, None]
+    t_base_odom = -r_base_odom @ t_xy
 
     xy_path_odom = se2_points_odom.T[:2]
     xy_path_base = r_base_odom @ xy_path_odom + t_base_odom

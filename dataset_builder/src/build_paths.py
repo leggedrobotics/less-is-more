@@ -91,11 +91,12 @@ def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz=None)
                 continue
 
             gm = GridMap2D(
-                elevation=torch.from_numpy(elev_np).to(device).T,
+                elevation=torch.from_numpy(elev_np).to(device),
                 resolution=cfg.map_resolution,
                 origin_xy=origin,
             )
 
+            planner.objective.set_map(gm)
             frame_paths, frame_goals = [], []
             for _ in range(cfg.paths_per_image):
                 goal   = _sample_geo_goal(rng)
@@ -126,13 +127,18 @@ def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz=None)
 
 # ── D_tel ──────────────────────────────────────────────────────────────────────
 
-def _build_tel_mission(source, mission_dir, cfg, rng) -> int:
+def _build_tel_mission(source, mission_dir, cfg, rng, viz=None) -> int:
     paths_list, goals_list, image_ids_list, goal_times_list = [], [], [], []
 
     skip_first = int(cfg.get("skip_first_frames", 0))
     interrupted = False
     try:
         for i in tqdm(range(skip_first, len(source)), desc=mission_dir.name, leave=False):
+            if viz is not None:
+                if not plt.fignum_exists(viz["fig"].number):
+                    break
+                viz["fig"].canvas.flush_events()
+
             goal_time = max(abs(float(rng.normal(cfg.goal_time_mean, cfg.goal_time_std))), 0.5)
 
             traj_world = source.get_trajectory_world(i, duration=goal_time, n=50)
@@ -147,6 +153,15 @@ def _build_tel_mission(source, mission_dir, cfg, rng) -> int:
             goals_list.append(goal_base.astype(np.float32))
             image_ids_list.append(i)
             goal_times_list.append(float(goal_time))
+
+            if viz is not None and i % viz["every"] == 0:
+                from dataset_builder.src.visualize import draw_frame
+                elev_np = source.get_elevation(i)
+                draw_frame(viz["axes"], viz["fig"], source, None,
+                           [path_base], [goal_base], i, elev_np,
+                           viz["rob_w"], viz["rob_h"], viz["cams"])
+                viz["fig"].canvas.draw()
+                plt.pause(viz["delay"])
     except KeyboardInterrupt:
         interrupted = True
     finally:
@@ -243,7 +258,7 @@ def main(cfg: DictConfig) -> None:
         if dataset_type == "geo":
             n, interrupted = _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz_ctx)
         else:
-            n, interrupted = _build_tel_mission(source, mission_dir, cfg, rng)
+            n, interrupted = _build_tel_mission(source, mission_dir, cfg, rng, viz_ctx)
 
         log.info(f"[{mission_ts}] wrote {n} samples")
         total += n

@@ -189,24 +189,30 @@ def draw_frame(
     img_front = source.get_image(frame_idx)
     img_right = np.array(Image.open(source.mission_dir / "images" / "hdr_right" / f"{frame_idx:06d}.jpeg").convert("RGB"))
 
-    trav_np = planner.objective._trav.squeeze().cpu().numpy().T
-    gdf_np  = planner.objective._gdf.squeeze().cpu().numpy()
-    gdf_fin = gdf_np[np.isfinite(gdf_np)]
-    gdf_max = float(np.percentile(gdf_fin, 95)) if len(gdf_fin) else 10.0
-
     for ax, img, title, cam in [
-        (ax_left,  img_left,  "hdr_left",  cams["left"]),
-        (ax_front, img_front, "hdr_front", cams["front"]),
-        (ax_right, img_right, "hdr_right", cams["right"]),
+        (ax_left,  img_left,  "hdr_left",  cams["left"] if cams else None),
+        (ax_front, img_front, "hdr_front", cams["front"] if cams else None),
+        (ax_right, img_right, "hdr_right", cams["right"] if cams else None),
     ]:
         ax.imshow(img); ax.axis("off"); ax.set_title(title, fontsize=9)
-        _overlay_cam(ax, img.shape[:2], paths, goals, colors, cam)
+        if cam is not None:
+            _overlay_cam(ax, img.shape[:2], paths, goals, colors, cam)
 
     vmin = float(np.nanpercentile(elev_np, 2))
     vmax = float(np.nanpercentile(elev_np, 98))
-    _draw_map(ax_el, elev_np,                                          "terrain",   vmin=vmin, vmax=vmax, title="Elevation [m]")
-    _draw_map(ax_tr, trav_np,                                          "coolwarm",  vmin=0,    vmax=1,    title="Traversability (red=bad)")
-    _draw_map(ax_gd, np.where(np.isfinite(gdf_np), gdf_np, np.nan),   "viridis_r", vmin=0,    vmax=gdf_max, title="GDF [m]")
-    _overlay_maps([ax_el, ax_tr, ax_gd], paths, goals, colors, rob_w, rob_h)
+    _draw_map(ax_el, elev_np, "terrain", vmin=vmin, vmax=vmax, title="Elevation [m]")
+    _overlay_maps([ax_el], paths, goals, colors, rob_w, rob_h)
+
+    if planner is not None:
+        trav_np = planner.objective._trav.squeeze().cpu().numpy()
+        gdf_np  = planner.objective._gdf.squeeze().cpu().numpy()
+        gdf_fin = gdf_np[np.isfinite(gdf_np)]
+        gdf_max = float(np.percentile(gdf_fin, 95)) if len(gdf_fin) else 10.0
+        _draw_map(ax_tr, trav_np,                                         "coolwarm",  vmin=0, vmax=1,       title="Traversability (red=bad)")
+        _draw_map(ax_gd, np.where(np.isfinite(gdf_np), gdf_np, np.nan),  "viridis_r", vmin=0, vmax=gdf_max, title="GDF [m]")
+        _overlay_maps([ax_tr, ax_gd], paths, goals, colors, rob_w, rob_h)
+    else:
+        ax_tr.axis("off")
+        ax_gd.axis("off")
 
     fig.suptitle(f"{source.mission_dir.name}   frame {frame_idx}   t={ts:.3f} s", fontsize=9)

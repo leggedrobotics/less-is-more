@@ -20,7 +20,7 @@ def fast_gdf_wrapper(
              uses (caller must multiply by resolution to get metres).
     """
     mult = image.shape[-1] * image.shape[-2]
-    image *= mult
+    image = image.clone() * mult
 
     mask = torch.ones_like(image)
     mask[..., start_x, start_y] = 0
@@ -35,7 +35,7 @@ def fast_gdf_wrapper(
     gdf = FastGeodis.generalised_geodesic2d(image, mask, v, lamb, iterations)
     gdf *= 2
 
-    if gdf[..., 100, 100] > mult:
+    if gdf[..., image.shape[-2] // 2, image.shape[-1] // 2] > mult:
         gdf = FastGeodis.generalised_geodesic2d(image, mask, v, 0.0, iterations)
         gdf *= 2
 
