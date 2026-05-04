@@ -140,7 +140,7 @@ class MPPIObjective:
 
     @torch.no_grad()
     def rollout(self, population: torch.Tensor) -> torch.Tensor:
-        """Integrate (vx, vy, wz) controls → SE(2) states (P, H, 3)."""
+        """Integrate (vx, vy, wz) controls -> SE(2) states (P, H, 3)."""
         P, H, _ = population.shape
         dt = self.cfg.dt
         x0, y0, yaw0 = self._start

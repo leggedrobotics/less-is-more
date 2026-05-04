@@ -1,7 +1,7 @@
 """GrandTourMissionDataset: camera images and DLIO pose.
 
 This dataset is the training-side view of one Grand Tour mission.
-It does NOT compute elevation maps — use GrandTourZarrSource from
+It does NOT compute elevation maps - use GrandTourZarrSource from
 mission_data_source.py for the build pipeline.
 """
 
@@ -20,7 +20,7 @@ from torchvision import transforms
 # ---------------------------------------------------------------------------
 
 def _quat_to_matrix(xyzw: np.ndarray) -> np.ndarray:
-    """Quaternion [x, y, z, w] → 3×3 rotation matrix (numpy)."""
+    """Quaternion [x, y, z, w] -> 3x3 rotation matrix (numpy)."""
     x, y, z, w = xyzw
     return np.array([
         [1 - 2*(y*y + z*z),     2*(x*y - z*w),     2*(x*z + y*w)],
@@ -50,8 +50,8 @@ class GrandTourMissionDataset(Dataset):
 
     Each sample:
         image_front  : Tensor (3, H, W)
-        pose_pos     : Tensor (3,)       — DLIO position in dlio_map frame
-        pose_orien   : Tensor (4,)       — DLIO quaternion (x,y,z,w)
+        pose_pos     : Tensor (3,)       - DLIO position in dlio_map frame
+        pose_orien   : Tensor (4,)       - DLIO quaternion (x,y,z,w)
         timestamp    : float
 
     With with_side_cams=True also:

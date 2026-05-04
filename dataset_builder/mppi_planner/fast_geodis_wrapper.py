@@ -12,7 +12,7 @@ def fast_gdf_wrapper(
     """Geodesic distance field from a binary obstacle image.
 
     Args:
-        image: (1, 1, H, W) float32 — 0 = free, >0 = obstacle (scaled internally).
+        image: (1, 1, H, W) float32 - 0 = free, >0 = obstacle (scaled internally).
         start_x, start_y: goal cell indices.
         obstacle_gdf_value: value assigned to unreachable cells.
     Returns:

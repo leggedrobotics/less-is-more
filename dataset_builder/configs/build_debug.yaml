@@ -2,5 +2,8 @@ defaults:
   - build
   - _self_
 
-missions_csv: dataset_builder/configs/missions_debug.csv
+missions:
+  - 2024-10-01-11-29-55
+  - 2024-10-01-12-00-49
+
 paths_per_image: 2

@@ -1,14 +1,14 @@
-"""SE(2) transform utilities ported from legacy/helpers/transform_helpers.py."""
+"""SE(2) transform utilities."""
 import numpy as np
 
 
 def convert_transform_to_se2(T: np.ndarray) -> np.ndarray:
-    """4×4 homogeneous transform → SE(2) [x, y, yaw]."""
+    """4x4 homogeneous transform -> SE(2) [x, y, yaw]."""
     return np.array([T[0, 3], T[1, 3], np.arctan2(T[1, 0], T[0, 0])], dtype=float)
 
 
 def convert_se2_to_transform(se2: np.ndarray) -> np.ndarray:
-    """SE(2) [x, y, yaw] → 4×4 homogeneous transform."""
+    """SE(2) [x, y, yaw] -> 4x4 homogeneous transform."""
     x, y, yaw = np.asarray(se2, dtype=float)
     c, s = np.cos(yaw), np.sin(yaw)
     return np.array([

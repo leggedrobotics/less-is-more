@@ -17,7 +17,7 @@ def invert_transform(T: np.ndarray) -> np.ndarray:
 
 def convert_se2_to_transform(se2: np.ndarray) -> np.ndarray:
     """
-    Convert an SE(2) pose [x, y, yaw] into a 4×4 homogeneous transform.
+    Convert an SE(2) pose [x, y, yaw] into a 4x4 homogeneous transform.
 
     Args:
         se2: array-like of shape (3,), [x, y, yaw]
@@ -35,7 +35,7 @@ def convert_se2_to_transform(se2: np.ndarray) -> np.ndarray:
 
 def convert_transform_to_se2(T: np.ndarray) -> np.ndarray:
     """
-    Convert a 4×4 homogeneous transform into an SE(2) pose [x, y, yaw].
+    Convert a 4x4 homogeneous transform into an SE(2) pose [x, y, yaw].
 
     Args:
         T: np.ndarray of shape (4, 4)
@@ -44,7 +44,7 @@ def convert_transform_to_se2(T: np.ndarray) -> np.ndarray:
     """
     T = np.asarray(T, dtype=float)
     if T.shape != (4, 4):
-        raise ValueError("T must be a 4×4 matrix")
+        raise ValueError("T must be a 4x4 matrix")
     x = T[0, 3]
     y = T[1, 3]
     yaw = np.arctan2(T[1, 0], T[0, 0])
@@ -57,7 +57,7 @@ def transform_se2_base_to_odom(se2_points_base: np.ndarray, t_odom_base: np.ndar
 
     Args:
         se2_points_base: np.ndarray of shape (N, 3), poses [x, y, yaw] in base frame
-        t_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom→base
+        t_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom->base
 
     Returns:
         se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in odom frame
@@ -65,7 +65,7 @@ def transform_se2_base_to_odom(se2_points_base: np.ndarray, t_odom_base: np.ndar
     if se2_points_base.ndim != 2 or se2_points_base.shape[1] != 3:
         raise ValueError("se2_points_base must be shape (N, 3)")
     if t_odom_base.shape != (4, 4):
-        raise ValueError("t_odom_base must be a 4×4 matrix")
+        raise ValueError("t_odom_base must be a 4x4 matrix")
 
     se2_pose_in_odom = convert_transform_to_se2(t_odom_base)
 
@@ -89,7 +89,7 @@ def transform_se2_odom_to_base(se2_points_odom: np.ndarray, T_odom_base: np.ndar
 
     Args:
         se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in base frame
-        t_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom→base
+        t_odom_base:     np.ndarray of shape (4, 4), homogeneous transform odom->base
 
     Returns:
         se2_points_odom: np.ndarray of shape (N, 3), poses [x, y, yaw] in odom frame
@@ -97,7 +97,7 @@ def transform_se2_odom_to_base(se2_points_odom: np.ndarray, T_odom_base: np.ndar
     if se2_points_odom.ndim != 2 or se2_points_odom.shape[1] != 3:
         raise ValueError("se2_points_base must be shape (N, 3)")
     if T_odom_base.shape != (4, 4):
-        raise ValueError("t_odom_base must be a 4×4 matrix")
+        raise ValueError("t_odom_base must be a 4x4 matrix")
 
     se2_pose_in_odom = convert_transform_to_se2(T_odom_base)
 

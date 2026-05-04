@@ -5,10 +5,10 @@ MissionDataSource defines the interface consumed by the path-building pipeline
 geometry/images from a different source (simulation, custom bags, etc.).
 
 GrandTourZarrSource reads the Grand Tour mission zarr layout:
-    data/hdr_front/         — camera timestamps
-    data/dlio_map_odometry/ — robot trajectory (world frame)
-    data/elevation_map/     — pre-computed robot-centric elevation (200×200, 4 cm)
-    images/hdr_front/       — JPEG images
+    data/hdr_front/         - camera timestamps
+    data/dlio_map_odometry/ - robot trajectory (world frame)
+    data/elevation_map/     - pre-computed robot-centric elevation (200x200, 4 cm)
+    images/hdr_front/       - JPEG images
 """
 
 from __future__ import annotations
