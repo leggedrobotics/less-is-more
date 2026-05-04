@@ -2,11 +2,11 @@ _target_: limo.src.dataset.local_datamodule.LocalLimoDataModule
 
 # Path to the root dataset folder (must contain a grandtour/ subdirectory
 # with mission folders already built by dataset_builder).
-dataset_folder: ${paths.data_dir}/dataset
+dataset_folder: ${paths.data_dir}/dataset_builder
 
 # CSV mapping mission timestamps to train/val/test splits.
 # Use a custom CSV pointing at only the missions you have built locally.
-missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split.csv
+missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split_example.csv
 
 # Dataset type: "tel" (teleoperation), "geo" (geometric), or "aug" (both)
 dataset_type: "aug"

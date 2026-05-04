@@ -1,0 +1,12 @@
+defaults:
+  - build
+  - _self_
+
+# Three ETH missions covering indoor and outdoor environments.
+# One path per frame keeps build time short (~10 min on a single GPU).
+missions:
+  - 2024-10-01-11-29-55   # ETH Polyterasse
+  - 2024-10-01-11-47-44   # ETH Mainbuilding Indoor
+  - 2024-10-01-12-00-49   # ETH Mainbuilding Outdoor
+
+paths_per_image: 1

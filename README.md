@@ -11,8 +11,8 @@
 - [x] Inference code
 - [x] Checkpoints released (SafeTensors on HuggingFace)
 - [x] Dataset and training code
+- [x] Dataset builder with MPPI planner
 - [ ] ROS integration
-- [ ] Dataset builder with MPPI planner
 
 ## Installation
 
@@ -127,6 +127,47 @@ By default, training uses [Weights & Biases](https://wandb.ai/) for logging.
 
 - **Checkpoints**: Saved to `logs/train/runs/<timestamp>/checkpoints/` (PyTorch Lightning format)
 - **SafeTensors weights**: Automatically converted and saved to `logs/train/runs/<timestamp>/weights/` after each checkpoint
+
+## Dataset Builder
+
+The `dataset_builder` package generates training samples from Grand Tour missions. It runs the MPPI geometric planner over pre-computed elevation maps to produce goal-conditioned paths, writing output in the same zarr format consumed by the training pipeline. Required topics are downloaded from HuggingFace automatically.
+
+### Quick start: build and train on 3 missions
+
+```bash
+# Build D_geo paths for the three ETH missions (1 path/frame, ~10 min)
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo
+
+# Train on the result
+uv run limo/src/train.py dataset=limo_local
+```
+
+Output goes to `data/dataset_builder/`. The `limo_local` dataset config points there and uses `missions_split_example.csv` (the same three missions, split into train/val/test).
+
+### Full build (all missions, as in the paper)
+
+```bash
+# D_geo: 10 paths per frame across all 48 missions
+uv run dataset_builder/src/build_paths.py dataset_type=geo
+
+# D_tel: teleoperation paths
+uv run dataset_builder/src/build_paths.py dataset_type=tel
+```
+
+To train on all missions, override the missions CSV:
+
+```bash
+uv run limo/src/train.py dataset=limo_local \
+  data.missions_csv=limo/configs/dataset/missions_split.csv
+```
+
+### Visualization
+
+Pass `viz=true` to watch the planner and maps while building:
+
+```bash
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo viz=true viz_every=50
+```
 
 ## Dataset
 

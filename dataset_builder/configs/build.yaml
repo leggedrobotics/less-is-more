@@ -1,4 +1,4 @@
-dataset_folder: data/dataset
+dataset_folder: data/dataset_builder
 elevation_revision: refs/pr/9
 
 # All Grand Tour missions (2024-11-04-16-52-38 excluded - no hdr_front images)
@@ -53,7 +53,7 @@ missions:
   - 2024-12-09-11-53-11
 
 dataset_type: geo  # geo | tel
-paths_per_image: 8
+paths_per_image: 10
 viz: false
 viz_every: 50
 viz_delay: 1.0
