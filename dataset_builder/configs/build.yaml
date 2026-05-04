@@ -122,5 +122,5 @@ mppi:
 
 hydra:
   run:
-    dir: .
+    dir: logs/dataset_builder
   output_subdir: null

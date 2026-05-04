@@ -11,3 +11,5 @@ docs/
 legacy/
 
 *.code-workspace
+CLAUDE.md
+*.log
