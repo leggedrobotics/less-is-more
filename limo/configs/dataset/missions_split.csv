@@ -15,7 +15,6 @@ ID,Short Name,Name,Timestamp,Size (GB),UUID,Split
 14,CYN-1,Grindelwald - Canyon 1,2024-11-04-12-55-59,119.97,7ffa3399-837f-40b7-8a2f-5760ce136533,train
 15,CYN-2,Grindelwald - Canyon 2,2024-11-04-13-07-13,95.01,58e4d73e-fff1-4209-bf95-6c1ee065b3f3,train
 16,HIL-1,Grindelwald - Burglauenen 1,2024-11-04-16-05-00,120.22,d38b3b33-c450-4bce-bbb8-5f961b6bb17c,train
-17,RIV-1,Grindelwald - River 1,2024-11-04-16-52-38,136.21,57363d91-6cbc-4b2f-ad25-d511fd0829e1,train
 18,PIL-1,Pilatus - Hike 1,2024-11-11-12-07-40,210.0,e3a92c6b-1fbb-496a-bdb0-ec754ec8f6f0,train
 19,PIL-2,Pilatus - Hike 2,2024-11-11-12-42-47,106.26,8a90fb38-885e-4b57-ad21-b7e44d3ec8fb,train
 20,ROOT-1,Pilatus - Fraekmuentegg Forest 1,2024-11-11-14-29-44,112.45,f7e8e6c1-828f-43a7-b047-1491217e8fb9,train

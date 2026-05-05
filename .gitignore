@@ -8,9 +8,6 @@ data/
 docs/
 
 # Will be added later
-dataset_builder
-helpers
-ros_package
-mppi_planner
+legacy/
 
 *.code-workspace
