@@ -53,6 +53,7 @@ missions:
   - 2024-12-09-11-53-11
 
 dataset_type: geo  # geo | tel
+write_mode: overwrite  # overwrite | append
 paths_per_image: 10
 skip_first_frames: 0
 fetch_side_cams: false

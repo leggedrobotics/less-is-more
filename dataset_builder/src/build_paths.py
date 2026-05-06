@@ -14,6 +14,7 @@ Usage
 """
 
 import logging
+import shutil
 from pathlib import Path
 
 import hydra
@@ -42,13 +43,30 @@ def _resolve_paths(cfg: DictConfig) -> None:
         cfg["dataset_folder"] = str(root / p)
 
 
-def _write_zarr(zarr_dir: Path, paths, goals, image_ids, goal_times) -> None:
+def _write_zarr(zarr_dir: Path, paths, goals, image_ids, goal_times, write_mode: str = "overwrite") -> None:
     zarr_dir.mkdir(parents=True, exist_ok=True)
-    g = zarr.open_group(str(zarr_dir), mode="w")
-    g.create_dataset("path",      data=np.array(paths,      dtype=np.float32), chunks=(1000, 50, 3))
-    g.create_dataset("goal",      data=np.array(goals,      dtype=np.float32), chunks=(1000, 3))
-    g.create_dataset("image_id",  data=np.array(image_ids,  dtype=np.int64),   chunks=(1000,))
-    g.create_dataset("goal_time", data=np.array(goal_times, dtype=np.float32), chunks=(1000,))
+    if write_mode == "overwrite":
+        g = zarr.open_group(str(zarr_dir), mode="w")
+        g.create_dataset("path",      data=np.array(paths,      dtype=np.float32), chunks=(1000, 50, 3))
+        g.create_dataset("goal",      data=np.array(goals,      dtype=np.float32), chunks=(1000, 3))
+        g.create_dataset("image_id",  data=np.array(image_ids,  dtype=np.int64),   chunks=(1000,))
+        g.create_dataset("goal_time", data=np.array(goal_times, dtype=np.float32), chunks=(1000,))
+    else:  # append
+        g = zarr.open_group(str(zarr_dir), mode="a")
+        new_paths      = np.array(paths,      dtype=np.float32)
+        new_goals      = np.array(goals,      dtype=np.float32)
+        new_image_ids  = np.array(image_ids,  dtype=np.int64)
+        new_goal_times = np.array(goal_times, dtype=np.float32)
+        if "path" in g:
+            g["path"].append(new_paths)
+            g["goal"].append(new_goals)
+            g["image_id"].append(new_image_ids)
+            g["goal_time"].append(new_goal_times)
+        else:
+            g.create_dataset("path",      data=new_paths,      chunks=(1000, 50, 3))
+            g.create_dataset("goal",      data=new_goals,      chunks=(1000, 3))
+            g.create_dataset("image_id",  data=new_image_ids,  chunks=(1000,))
+            g.create_dataset("goal_time", data=new_goal_times, chunks=(1000,))
 
 
 # ── D_geo ──────────────────────────────────────────────────────────────────────
@@ -70,7 +88,7 @@ def _check_min_nan_dist(elev: np.ndarray, min_cells: int) -> bool:
     return dist.min().item() >= min_cells
 
 
-def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz=None) -> int:
+def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, write_mode, viz=None) -> int:
     origin = torch.tensor([-cfg.map_size, -cfg.map_size], dtype=torch.float32, device=device)
     start  = torch.zeros(3, dtype=torch.float32, device=device)
     paths_list, goals_list, image_ids_list, goal_times_list = [], [], [], []
@@ -112,7 +130,8 @@ def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz=None)
                 from dataset_builder.src.visualize import draw_frame
                 draw_frame(viz["axes"], viz["fig"], source, planner,
                            frame_paths, frame_goals, i, elev_np,
-                           viz["rob_w"], viz["rob_h"], viz["cams"])
+                           viz["rob_w"], viz["rob_h"], viz["cams"],
+                           viz["resolution"], viz["n_cells"])
                 viz["fig"].canvas.draw()
                 plt.pause(viz["delay"])
     except KeyboardInterrupt:
@@ -121,13 +140,13 @@ def _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz=None)
         n = len(paths_list)
         if n > 0:
             _write_zarr(mission_dir / "data" / "geometric_paths",
-                        paths_list, goals_list, image_ids_list, goal_times_list)
+                        paths_list, goals_list, image_ids_list, goal_times_list, write_mode)
     return n, interrupted
 
 
 # ── D_tel ──────────────────────────────────────────────────────────────────────
 
-def _build_tel_mission(source, mission_dir, cfg, rng, viz=None) -> int:
+def _build_tel_mission(source, mission_dir, cfg, rng, write_mode, viz=None) -> int:
     paths_list, goals_list, image_ids_list, goal_times_list = [], [], [], []
 
     skip_first = int(cfg.get("skip_first_frames", 0))
@@ -159,7 +178,8 @@ def _build_tel_mission(source, mission_dir, cfg, rng, viz=None) -> int:
                 elev_np = source.get_elevation(i)
                 draw_frame(viz["axes"], viz["fig"], source, None,
                            [path_base], [goal_base], i, elev_np,
-                           viz["rob_w"], viz["rob_h"], viz["cams"])
+                           viz["rob_w"], viz["rob_h"], viz["cams"],
+                           viz["resolution"], viz["n_cells"])
                 viz["fig"].canvas.draw()
                 plt.pause(viz["delay"])
     except KeyboardInterrupt:
@@ -168,7 +188,7 @@ def _build_tel_mission(source, mission_dir, cfg, rng, viz=None) -> int:
         n = len(paths_list)
         if n > 0:
             _write_zarr(mission_dir / "data" / "teleop_paths",
-                        paths_list, goals_list, image_ids_list, goal_times_list)
+                        paths_list, goals_list, image_ids_list, goal_times_list, write_mode)
     return n, interrupted
 
 
@@ -185,9 +205,26 @@ def main(cfg: DictConfig) -> None:
     rng    = np.random.default_rng(cfg.seed)
     device = cfg.device
 
-    missions     = list(cfg.missions)
+    missions      = list(cfg.missions)
     grandtour_dir = Path(cfg.dataset_folder) / "grandtour"
     grandtour_dir.mkdir(parents=True, exist_ok=True)
+
+    write_mode  = cfg.get("write_mode", "overwrite")
+    zarr_subdir = "geometric_paths" if dataset_type == "geo" else "teleop_paths"
+
+    if write_mode == "overwrite":
+        existing = [m for m in missions if (grandtour_dir / m / "data" / zarr_subdir).exists()]
+        if existing:
+            log.warning(f"{len(existing)} mission(s) already have '{zarr_subdir}' data:")
+            for m in existing:
+                log.warning(f"  {m}")
+            answer = input("Delete existing data and rebuild from scratch? [y/N]: ").strip().lower()
+            if answer != "y":
+                log.info("Aborted. Use write_mode=append to add to existing data.")
+                return
+            for m in existing:
+                shutil.rmtree(grandtour_dir / m / "data" / zarr_subdir)
+                log.info(f"Removed {m}/data/{zarr_subdir}")
 
     planner = MPPIPlanner(cfg.mppi, device) if dataset_type == "geo" else None
 
@@ -234,13 +271,15 @@ def main(cfg: DictConfig) -> None:
         plt.ion()
         fig, axes = make_figure()
         viz_ctx = {
-            "fig":   fig,
-            "axes":  axes,
-            "every": int(cfg.get("viz_every", 50)),
-            "delay": float(cfg.get("viz_delay", 1.0)),
-            "rob_w": rob_w,
-            "rob_h": rob_h,
-            "cams":  None,
+            "fig":        fig,
+            "axes":       axes,
+            "every":      int(cfg.get("viz_every", 50)),
+            "delay":      float(cfg.get("viz_delay", 1.0)),
+            "rob_w":      rob_w,
+            "rob_h":      rob_h,
+            "cams":       None,
+            "resolution": cfg.map_resolution,
+            "n_cells":    int(cfg.map_size * 2 / cfg.map_resolution),
         }
 
     log.info(f"Building D_{dataset_type} for {len(missions)} mission(s)")
@@ -256,9 +295,9 @@ def main(cfg: DictConfig) -> None:
             viz_ctx["cams"] = load_cameras(mission_dir)
 
         if dataset_type == "geo":
-            n, interrupted = _build_geo_mission(source, mission_dir, planner, cfg, rng, device, viz_ctx)
+            n, interrupted = _build_geo_mission(source, mission_dir, planner, cfg, rng, device, write_mode, viz_ctx)
         else:
-            n, interrupted = _build_tel_mission(source, mission_dir, cfg, rng, viz_ctx)
+            n, interrupted = _build_tel_mission(source, mission_dir, cfg, rng, write_mode, viz_ctx)
 
         log.info(f"[{mission_ts}] wrote {n} samples")
         total += n
