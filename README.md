@@ -140,17 +140,16 @@ The `dataset_builder` package generates training samples from Grand Tour mission
 ### Quick start: build and train on 3 missions
 
 ```bash
-# Build D_geo paths for 3 missions - ETH outdoor, Jungfraujoch, Construction site
-# (1 path/frame, skip first 1000 frames, ~15 min on a single GPU)
+# Build geo + tel paths for 3 missions - ETH outdoor, Jungfraujoch, Construction site
+# (1 path/frame, skips first 1000 frames)
 uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=tel
 
-# Quick training run on the result (5 epochs, CSV logger — no WandB needed)
-uv run limo/src/train.py experiment=train_limo_local
+# Train on the result with aug (geo + tel), 5 epochs, CSV logger — no WandB needed
+uv run limo/src/train.py experiment=train_limo_local_example
 ```
 
-Output goes to `data/dataset_builder/`. The `limo_local` dataset config points there and uses `missions_split_example.csv` (the same three missions, split into train/val/test). The default `dataset_type` is `geo`; to train on `aug` (geo + tel combined), also run `build_paths.py dataset_type=tel` first and then pass `dataset.dataset_type=aug`.
-
-`experiment=train_limo_local` is a shorthand that selects `dataset=limo_local` and switches the logger to CSV (no WandB needed). Alternatively, `experiment=train_limo_debug dataset=limo_local` runs the same data config but keeps the WandB logger.
+Output goes to `data/dataset_builder/`. `experiment=train_limo_local_example` selects `dataset=limo_local_example` (points at the three example missions, `dataset_type=aug`) and switches the logger to CSV.
 
 ### Full build (all missions, as in the paper)
 
@@ -162,20 +161,32 @@ uv run dataset_builder/src/build_paths.py dataset_type=geo
 uv run dataset_builder/src/build_paths.py dataset_type=tel
 ```
 
-To train on all missions, override the missions CSV:
+Then train on all missions:
 
 ```bash
-uv run limo/src/train.py dataset=limo_local \
-  dataset.missions_csv=limo/configs/dataset/missions_split.csv
+uv run limo/src/train.py experiment=train_limo_local
 ```
 
 ### Visualization
 
-Pass `viz=true` to watch the planner and maps while building:
+Pass `viz=true` to watch the planner and maps live while building:
 
 ```bash
 uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo viz=true
 ```
+
+The viewer shows elevation, traversability, and GDF maps in the bottom row, and camera images in the top row. Side camera images are included automatically if they were already downloaded (see below); if not, those panels are left blank without failing.
+
+### Side cameras
+
+By default only the front camera and odometry are downloaded. To also pull the left and right cameras — required for training the side-camera model variant — pass `fetch_side_cams=true`:
+
+```bash
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo fetch_side_cams=true
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=tel fetch_side_cams=true
+```
+
+Side camera data is then available for `experiment=train_limo_side_cams`.
 
 > **Note on data availability**: The elevation maps (`elevation_revision: refs/pr/9`) and the pre-built LiMo path zarrs (`HF_REVISION_LIMO = "refs/pr/6"`) live on open HuggingFace PRs against `leggedrobotics/grand_tour_dataset` that have not yet been merged to `main`. The dataset builder downloads from these PR branches automatically; they will be updated to point at `main` once the PRs are merged.
 
@@ -204,7 +215,7 @@ dataset_tel = get_dataset(
     dataset_type="tel",           # or "geo", "aug"
     dataset_folder="data/dataset",
     missions_csv="missions_split.csv",
-    with_side_cams=False
+    with_side_cams=True
 )
 
 # Load augmented samples with side cameras

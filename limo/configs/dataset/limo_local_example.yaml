@@ -5,7 +5,8 @@ _target_: limo.src.dataset.local_datamodule.LocalLimoDataModule
 dataset_folder: ${paths.data_dir}/dataset_builder
 
 # CSV mapping mission timestamps to train/val/test splits.
-missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split.csv
+# Points at the 3 example missions built by build_example.yaml.
+missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split_example.csv
 
 # Dataset type: "tel" (teleoperation), "geo" (geometric), or "aug" (both).
 dataset_type: "aug"

@@ -19,7 +19,6 @@ import sys
 from pathlib import Path
 
 import hydra
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import zarr
@@ -98,7 +97,7 @@ def _build_mission(source, mission_dir, zarr_subdir, cfg, write_mode, viz, step_
     try:
         for i in tqdm(range(skip_first, len(source)), desc=mission_dir.name, leave=False):
             if viz is not None:
-                if not plt.fignum_exists(viz["fig"].number):
+                if not viz["plt"].fignum_exists(viz["fig"].number):
                     break
                 viz["fig"].canvas.flush_events()
 
@@ -117,7 +116,7 @@ def _build_mission(source, mission_dir, zarr_subdir, cfg, write_mode, viz, step_
                            viz["rob_w"], viz["rob_h"], viz["cams"],
                            viz["resolution"], viz["n_cells"])
                 viz["fig"].canvas.draw()
-                plt.pause(viz["delay"])
+                viz["plt"].pause(viz["delay"])
     except KeyboardInterrupt:
         interrupted = True
     finally:
@@ -217,7 +216,7 @@ def main(cfg: DictConfig) -> None:
     # Download all missions before opening the figure so there is no blank
     # unresponsive window during network I/O.
     topics_main = ["hdr_front", "dlio_map_odometry"]
-    if cfg.get("fetch_side_cams") or use_viz:
+    if cfg.get("fetch_side_cams"):
         topics_main += ["hdr_left", "hdr_right"]
 
     log.info(f"Pulling data for {len(missions)} mission(s) ...")
@@ -238,6 +237,9 @@ def main(cfg: DictConfig) -> None:
         )
 
     if use_viz:
+        import matplotlib
+        matplotlib.use("TkAgg")
+        import matplotlib.pyplot as plt
         from dataset_builder.src.visualize import make_figure
         fp    = cfg.mppi.footprint[0]
         rob_w = (fp[1][1] - fp[0][1]) / cfg.map_resolution
@@ -254,6 +256,7 @@ def main(cfg: DictConfig) -> None:
             "cams":       None,
             "resolution": cfg.map_resolution,
             "n_cells":    int(cfg.map_size * 2 / cfg.map_resolution),
+            "plt":        plt,
         }
 
     log.info(f"Building D_{dataset_type} for {len(missions)} mission(s)")

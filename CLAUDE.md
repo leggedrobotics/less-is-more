@@ -23,10 +23,14 @@ uv run limo/src/train.py experiment=train_limo_debug
 # Full training
 uv run limo/src/train.py experiment=train_limo_on_D_aug
 
-# Build D_geo paths for 3 example missions (~15 min on GPU)
+# Build geo + tel paths for 3 example missions
 uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=tel
 
-# Quick training run on locally built dataset (no WandB needed)
+# Quick training run on 3 example missions (no WandB needed)
+uv run limo/src/train.py experiment=train_limo_local_example
+
+# Training on all locally built missions (no WandB needed)
 uv run limo/src/train.py experiment=train_limo_local
 
 # Inference on example images

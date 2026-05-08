@@ -189,23 +189,24 @@ class LimoModel(LightningModule):
         images = batch["image_front"][:num_imgs]
         goals = batch["goal"][:num_imgs]
 
-        # Convert images from (B, C, H, W) tensor to (B, H, W, C) numpy array
-        images = images.cpu().permute(0, 2, 3, 1).numpy()
-        images = (images * 255).astype(np.uint8)  # Assuming normalized [0, 1]
+        def _to_np(t: "torch.Tensor") -> np.ndarray:
+            return (t.cpu().permute(0, 2, 3, 1).numpy() * 255).astype(np.uint8)
+
+        images = _to_np(images)
+        images_left = _to_np(batch["image_left"][:num_imgs]) if "image_left" in batch else None
+        images_right = _to_np(batch["image_right"][:num_imgs]) if "image_right" in batch else None
 
         goals = goals.cpu().numpy()
 
         visualizations = []
         for i in range(len(predicted_paths)):
-            # Create combined visualization with both ground truth and prediction
             combined_img = create_combined_visualization(
                 images[i],
-                [
-                    ground_truth_paths[i],
-                    predicted_paths[i],
-                ],  # GT first, then prediction
-                goals[i : i + 1],  # Wrap goal as (1, 3) array
+                [ground_truth_paths[i], predicted_paths[i]],
+                goals[i : i + 1],
                 camera_info=self.camera_info,
+                image_left=images_left[i] if images_left is not None else None,
+                image_right=images_right[i] if images_right is not None else None,
             )
             visualizations.append(wandb.Image(combined_img))
 
