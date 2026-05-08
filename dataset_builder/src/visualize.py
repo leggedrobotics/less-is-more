@@ -208,7 +208,7 @@ def draw_frame(
 
     vmin = float(np.nanpercentile(elev_np, 2))
     vmax = float(np.nanpercentile(elev_np, 98))
-    _draw_map(ax_el, elev_np, "terrain", vmin=vmin, vmax=vmax, title="Elevation [m]")
+    _draw_map(ax_el, elev_np, "terrain", vmin=vmin, vmax=vmax, title="Elevation")
     _overlay_maps([ax_el], paths, goals, colors, rob_w, rob_h, resolution, n_cells)
 
     if planner is not None:
@@ -216,8 +216,8 @@ def draw_frame(
         gdf_np  = planner.objective.gdf.squeeze().cpu().numpy()
         gdf_fin = gdf_np[np.isfinite(gdf_np)]
         gdf_max = float(np.percentile(gdf_fin, 95)) if len(gdf_fin) else 10.0
-        _draw_map(ax_tr, trav_np,                                         "coolwarm",  vmin=0, vmax=1,       title="Traversability (red=bad)")
-        _draw_map(ax_gd, np.where(np.isfinite(gdf_np), gdf_np, np.nan),  "viridis_r", vmin=0, vmax=gdf_max, title="GDF [m]")
+        _draw_map(ax_tr, trav_np,                                         "coolwarm",  vmin=0, vmax=1,       title="Traversability")
+        _draw_map(ax_gd, np.where(np.isfinite(gdf_np), gdf_np, np.nan),  "viridis_r", vmin=0, vmax=gdf_max, title="GDF")
         _overlay_maps([ax_tr, ax_gd], paths, goals, colors, rob_w, rob_h, resolution, n_cells)
     else:
         ax_tr.axis("off")
