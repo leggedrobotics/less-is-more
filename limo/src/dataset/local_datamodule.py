@@ -83,11 +83,15 @@ class LocalLimoDataModule(LightningDataModule):
                 continue
             missing = [d for d in required if not (mission_dir / "data" / d).exists()]
             if missing:
+                needed = {"teleop_paths": "tel", "geometric_paths": "geo"}
+                cmds = " && ".join(
+                    f"uv run dataset_builder/src/build_paths.py dataset_type={needed[d]}"
+                    for d in missing
+                )
                 raise FileNotFoundError(
                     f"Mission '{mission}' is missing zarr group(s) {missing} "
                     f"for dataset_type='{self.dataset_type}'. "
-                    f"Run the dataset builder first: "
-                    f"uv run dataset_builder/src/build_paths.py dataset_type={self.dataset_type}"
+                    f"Run the dataset builder first: {cmds}"
                 )
             splits[split].append(
                 get_mission_dataset(
