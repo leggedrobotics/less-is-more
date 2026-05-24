@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /dataset: limo_local_example
+  - override /logger: csv
+
+tags: ["local", "limo", "D_aug", "example"]
+
+trainer:
+  max_epochs: 5
+
+dataset:
+  batch_size: 4
+
+seed: 12345

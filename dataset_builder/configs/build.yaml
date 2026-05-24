@@ -1,0 +1,134 @@
+dataset_folder: data/dataset_builder
+elevation_revision: refs/pr/9
+
+# All Grand Tour missions (2024-11-04-16-52-38 excluded - no hdr_front images)
+missions:
+  - 2024-10-01-11-29-55
+  - 2024-10-01-11-47-44
+  - 2024-10-01-12-00-49
+  - 2024-11-02-17-10-25
+  - 2024-11-02-17-18-32
+  - 2024-11-02-17-43-10
+  - 2024-11-02-21-12-51
+  - 2024-11-03-07-52-45
+  - 2024-11-03-07-57-34
+  - 2024-11-03-08-17-23
+  - 2024-11-03-13-51-43
+  - 2024-11-03-13-59-54
+  - 2024-11-04-10-57-34
+  - 2024-11-04-12-55-59
+  - 2024-11-04-13-07-13
+  - 2024-11-04-16-05-00
+  - 2024-11-11-12-07-40
+  - 2024-11-11-12-42-47
+  - 2024-11-11-14-29-44
+  - 2024-11-11-16-14-23
+  - 2024-11-14-11-17-02
+  - 2024-11-14-12-01-26
+  - 2024-11-14-13-45-37
+  - 2024-11-14-14-36-02
+  - 2024-11-14-15-22-43
+  - 2024-11-14-16-04-09
+  - 2024-11-15-10-16-35
+  - 2024-11-15-11-18-14
+  - 2024-11-15-11-37-15
+  - 2024-11-15-12-06-03
+  - 2024-11-15-14-14-12
+  - 2024-11-15-14-43-52
+  - 2024-11-15-16-41-14
+  - 2024-11-18-12-05-01
+  - 2024-11-18-13-22-14
+  - 2024-11-18-13-48-19
+  - 2024-11-18-15-46-05
+  - 2024-11-18-16-59-23
+  - 2024-11-18-17-13-09
+  - 2024-11-18-17-31-36
+  - 2024-11-25-14-57-08
+  - 2024-11-25-16-36-19
+  - 2024-12-03-13-15-38
+  - 2024-12-03-13-26-40
+  - 2024-12-09-09-34-43
+  - 2024-12-09-09-41-46
+  - 2024-12-09-11-28-28
+  - 2024-12-09-11-53-11
+
+dataset_type: geo  # geo | tel
+write_mode: overwrite  # overwrite | append
+paths_per_image: 10
+skip_first_frames: 0
+fetch_side_cams: false
+viz: false
+viz_every: 5
+viz_delay: 1.0
+max_nan_frac: 0.75
+min_nan_dist_cells: 10
+device: cuda
+seed: 42
+map_size: 4.0
+map_resolution: 0.04
+goal_time: 5.0
+goal_time_mean: 5.0
+goal_time_std: 2.5
+goal_x_mean: 5.0
+goal_y_mean: 0.0
+goal_yaw_mean: 0.0
+goal_x_std: 2.5
+goal_y_std: 2.0
+goal_yaw_std: 0.785  # pi/4
+
+mppi:
+  # Integration
+  dt: 0.1
+  horizon: 50
+
+  # Optimizer
+  population_size: 512
+  num_iterations: 15
+  gamma: 1.0
+  sigma: 0.95
+  beta: 0.3
+  provide_zero_action: true
+
+  # Action limits [vx, vy, wz] in m/s, m/s, rad/s
+  lower_bound: [-0.2, -0.2, -0.8]
+  upper_bound: [1.0, 0.2, 0.8]
+
+  # Action filtering
+  vel_lin_min: 0.2
+  vel_ang_min: 0.2
+
+  # Action cost weights
+  action_cost_rotation: 1.0
+  action_cost_trans_forward: 1.0
+  action_cost_trans_side: 10.0
+
+  # Traversability cost weights
+  traversability_cost: 8.0
+  traversability_unknown_cost: 60.0
+  footprint:
+    - [[-0.55, -0.26], [0.55, 0.26]]
+
+  # Goal distance / heading costs
+  position_cost: 200.0
+  heading_cost: 25.0
+  position_cost_at_goal_tolerance: 0.1
+  heading_cost_at_goal_tolerance: 0.5
+  max_distance_for_heading_cost: 2.0
+  at_goal_reward: 50.0
+  position_cost_mean_limit: 1000.0
+  distance_pre_log_factor: 2.0
+
+  # Traversability thresholds
+  safe_th: 0.3
+  risky_th: 0.8
+  fatal_th: 0.9
+  risky_value: 2.0
+  fatal_value: 100000.0
+  fatal_cells_buffer: 0
+  gdf_obstacle_buffer: 1
+  border_cells: 3
+
+hydra:
+  run:
+    dir: logs/dataset_builder
+  output_subdir: null

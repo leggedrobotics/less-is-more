@@ -1,4 +1,0 @@
-ID,Short Name,Name,Timestamp,Size (GB),UUID,Split
-1,ETH-1,ETH - Polyterasse,2024-10-01-11-29-55,116.36,e97e35ad-dd7b-49c4-a158-95aba246520e,train
-2,ETH-2,ETH - Mainbuilding Indoor,2024-10-01-11-47-44,95.47,4ae7f9bc-ee51-4ba7-97c7-6a86fe765ab8,test
-3,ETH-3,ETH - Mainbuilding Outdoor,2024-10-01-12-00-49,82.26,da8f2265-5138-4d0b-8ae1-01e0015d1c58,val

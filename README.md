@@ -11,19 +11,24 @@
 - [x] Inference code
 - [x] Checkpoints released (SafeTensors on HuggingFace)
 - [x] Dataset and training code
+- [x] Dataset builder with MPPI planner
 - [ ] ROS integration
-- [ ] Dataset builder with MPPI planner
 
 ## Installation
 
-This project uses [uv](https://docs.astral.sh/uv/) for dependency management. We assume an NVIDIA GPU with driver version ≥530 (for CUDA 12.1 support).
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management. Tested on Ubuntu 22.04, Python 3.10, NVIDIA GPU with driver version ≥530 (CUDA 12.1).
 
 ```bash
-git clone https://github.com/leggedrobotics/less-is-more \
-  && cd less-is-more \
-  && uv sync \
-  && uv pip install -e .
+git clone https://github.com/leggedrobotics/less-is-more && cd less-is-more && uv sync
 ```
+
+To also use the dataset builder:
+
+```bash
+uv sync --extra dataset_builder
+```
+
+> **Note**: The `dataset_builder` extra is only supported on **Linux x86_64 with Python 3.10**. It vendors a pre-built [FastGeodis](https://github.com/masadcv/FastGeodis) wheel because `pip install FastGeodis` requires a from-source CUDA build that is broken in the standard distribution.
 
 The codebase uses [Hydra](https://hydra.cc/) for configuration management in the `limo` package.
 
@@ -128,6 +133,65 @@ By default, training uses [Weights & Biases](https://wandb.ai/) for logging.
 - **Checkpoints**: Saved to `logs/train/runs/<timestamp>/checkpoints/` (PyTorch Lightning format)
 - **SafeTensors weights**: Automatically converted and saved to `logs/train/runs/<timestamp>/weights/` after each checkpoint
 
+## Dataset Builder
+
+The `dataset_builder` package generates training samples from Grand Tour missions. It runs the MPPI geometric planner over pre-computed elevation maps to produce goal-conditioned paths, writing output in the same zarr format consumed by the training pipeline. Required topics are downloaded from HuggingFace automatically.
+
+### Quick start: build and train on 3 missions
+
+```bash
+# Build geo + tel paths for 3 missions - ETH outdoor, Jungfraujoch, Construction site
+# (1 path/frame, skips first 1000 frames)
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=tel
+
+# Train on the result with aug (geo + tel), 5 epochs, CSV logger — no WandB needed
+uv run limo/src/train.py experiment=train_limo_local_example
+```
+
+Output goes to `data/dataset_builder/`. `experiment=train_limo_local_example` selects `dataset=limo_local_example` (points at the three example missions, `dataset_type=aug`) and switches the logger to CSV.
+
+### Full build (all missions, as in the paper)
+
+```bash
+# D_geo: 10 paths per frame across all 48 missions
+uv run dataset_builder/src/build_paths.py dataset_type=geo
+
+# D_tel: teleoperation paths
+uv run dataset_builder/src/build_paths.py dataset_type=tel
+```
+
+Then train on all missions:
+
+```bash
+uv run limo/src/train.py experiment=train_limo_local
+```
+
+### Visualization
+
+Pass `viz=true` to watch the planner and maps live while building:
+
+```bash
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo viz=true
+```
+
+The viewer shows elevation, traversability, and GDF maps in the bottom row, and camera images in the top row. Side camera images are included automatically if they were already downloaded (see below); if not, those panels are left blank without failing. The display updates every 5 frames (`viz_every: 5`); override with e.g. `viz_every=1` on the command line.
+
+![Dataset builder visualization](docs/dataset_builder_viz.png)
+
+### Side cameras
+
+By default only the front camera and odometry are downloaded. To also pull the left and right cameras — required for training the side-camera model variant — pass `fetch_side_cams=true`:
+
+```bash
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=geo fetch_side_cams=true
+uv run dataset_builder/src/build_paths.py --config-name build_example dataset_type=tel fetch_side_cams=true
+```
+
+Side camera data is then available for `experiment=train_limo_side_cams`.
+
+> **Note on data availability**: The elevation maps (`elevation_revision: refs/pr/9`) and the pre-built LiMo path zarrs (`HF_REVISION_LIMO = "refs/pr/6"`) live on open HuggingFace PRs against `leggedrobotics/grand_tour_dataset` that have not yet been merged to `main`. The dataset builder downloads from these PR branches automatically; they will be updated to point at `main` once the PRs are merged.
+
 ## Dataset
 
 LiMo's training data is based on **Grand Tour dataset** from HuggingFace: [`leggedrobotics/grand_tour_dataset`](https://huggingface.co/datasets/leggedrobotics/grand_tour_dataset)
@@ -153,7 +217,7 @@ dataset_tel = get_dataset(
     dataset_type="tel",           # or "geo", "aug"
     dataset_folder="data/dataset",
     missions_csv="missions_split.csv",
-    with_side_cams=False
+    with_side_cams=True
 )
 
 # Load augmented samples with side cameras
@@ -182,7 +246,7 @@ grandtour_mission_3,2024-01-17,test
 
 - Include only specific missions by adding rows to the CSV
 - Control split ratios by adjusting the number of missions per split
-- Quick debugging: Use a subset of missions (see `limo/configs/data/missions_split_debug.csv`)
+- Quick start: use `missions_split_example.csv` (3 missions: train/val/test, used by `train_limo_local`)
 
 ## Citation
 

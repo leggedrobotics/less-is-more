@@ -13,7 +13,7 @@ trainer:
   limit_test_batches: 0.05
 
 dataset:
-  missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split_debug.csv
+  missions_csv: ${paths.root_dir}/limo/configs/dataset/missions_split_example.csv
 
 logger:
   wandb:

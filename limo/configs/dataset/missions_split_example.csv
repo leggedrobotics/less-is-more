@@ -1,0 +1,4 @@
+ID,Short Name,Name,Timestamp,Size (GB),UUID,Split
+3,ETH-3,ETH - Mainbuilding Outdoor,2024-10-01-12-00-49,82.26,da8f2265-5138-4d0b-8ae1-01e0015d1c58,train
+6,SPX-3,Jungfraujoch - Sphinx 3,2024-11-02-17-43-10,54.51,c31cdc28-cb10-4eff-adec-53b0069eacac,val
+47,CON-2,Construction - Corridor 2,2024-12-09-09-41-46,36.02,48a42585-1b42-44df-bf82-883b09706efa,test

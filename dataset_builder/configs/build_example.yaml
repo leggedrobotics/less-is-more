@@ -1,0 +1,13 @@
+defaults:
+  - build
+  - _self_
+
+# Three missions covering outdoor ETH, alpine terrain, and a construction site.
+# One path per frame keeps build time short (~15 min on a single GPU).
+missions:
+  - 2024-10-01-12-00-49 # ETH Mainbuilding Outdoor      (train)
+  - 2024-11-02-17-43-10 # Jungfraujoch Sphinx 3         (val)
+  - 2024-12-09-09-41-46 # Construction - Corridor 2     (test)
+
+paths_per_image: 1
+skip_first_frames: 1000

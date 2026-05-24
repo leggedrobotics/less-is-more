@@ -350,35 +350,46 @@ def create_combined_visualization(
     paths: List[np.ndarray],
     goals: np.ndarray,
     camera_info: Optional[Dict] = None,
+    image_left: Optional[np.ndarray] = None,
+    image_right: Optional[np.ndarray] = None,
 ) -> np.ndarray:
     """
-    Create combined visualization with camera view on left and BEV on right.
+    Create combined visualization with camera view(s) and BEV.
+
+    Layout without side cams: [front | BEV]
+    Layout with side cams:    [left | front | right | BEV]
 
     Args:
-        original_image: (H, W, 3) RGB image
+        original_image: (H, W, 3) RGB front image
         paths: List of (N, 3) arrays of predicted paths (x, y, yaw)
         goals: (M, 3) array of goals (x, y, yaw)
         camera_info: Dict with 'K', 'D', 'E' matrices, or None for raw image
+        image_left: optional (H, W, 3) RGB left image
+        image_right: optional (H, W, 3) RGB right image
 
     Returns:
-        combined_image: (H, 2W, 3) RGB image with camera view left, BEV right
+        combined_image: RGB composite
     """
-    left_panel = create_camera_visualization(original_image, paths, goals, camera_info)
-    right_panel = create_bev_visualization(paths, goals)
+    front_panel = create_camera_visualization(original_image, paths, goals, camera_info)
+    bev_panel = create_bev_visualization(paths, goals)
 
-    h = left_panel.shape[0]
-    bev_aspect = right_panel.shape[1] / right_panel.shape[0]
-    new_bev_width = int(h * bev_aspect)
-    right_resized = cv2.resize(right_panel, (new_bev_width, h))
+    h = front_panel.shape[0]
+    pad = np.ones((h, 15, 3), dtype=np.uint8) * 255
 
-    # Add padding between panels and on the right
-    padding_width = 15
-    padding = np.ones((h, padding_width, 3), dtype=np.uint8) * 255
-    padding_right = np.ones((h, padding_width, 3), dtype=np.uint8) * 255
+    bev_w = int(h * bev_panel.shape[1] / bev_panel.shape[0])
+    bev_resized = cv2.resize(bev_panel, (bev_w, h))
 
-    combined = np.hstack([left_panel, padding, right_resized, padding_right])
+    panels = []
+    if image_left is not None:
+        side_w = int(h * image_left.shape[1] / image_left.shape[0])
+        panels += [cv2.resize(image_left, (side_w, h)), pad]
+    panels += [front_panel, pad]
+    if image_right is not None:
+        side_w = int(h * image_right.shape[1] / image_right.shape[0])
+        panels += [cv2.resize(image_right, (side_w, h)), pad]
+    panels += [bev_resized, pad]
 
-    return combined
+    return np.hstack(panels)
 
 
 def load_image_and_normalize(
